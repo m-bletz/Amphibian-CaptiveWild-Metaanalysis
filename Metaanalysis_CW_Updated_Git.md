@@ -5,7 +5,7 @@ Molly Bletz
 
 -   [Alpha & Antifungal](#alpha-antifungal)
     -   [Packages](#packages)
-    -   [Data](#data)
+    -   [Reading in Data](#reading-in-data)
     -   [sOTU Richness](#sotu-richness)
     -   [Effective Species (expShannon)](#effective-species-expshannon)
     -   [Phylogenetic Diversity](#phylogenetic-diversity)
@@ -20,7 +20,7 @@ Molly Bletz
     -   [PCoA (wUF)](#pcoa-wuf)
     -   [Adonis](#adonis)
 -   [Differential Features](#differential-features)
-    -   [Data](#data-1)
+    -   [Data](#data)
     -   [Plots](#plots)
 -   [Venn Diagrams (Captive only)](#venn-diagrams-captive-only)
     -   [Venn Diagram Temperate
@@ -32,6 +32,8 @@ Molly Bletz
     -   [All Species](#all-species)
     -   [Anaxyrus boreas](#anaxyrus-boreas-1)
     -   [Rana luteiventris](#rana-luteiventris-1)
+    -   [Rana pretsiosa](#rana-pretsiosa-1)
+    -   [Ambystoma maculatum](#ambystoma-maculatum-1)
     -   [Andrias japonicus](#andrias-japonicus)
     -   [Cynops pyrrhogaster](#cynops-pyrrhogaster)
     -   [Plethodon cinereus](#plethodon-cinereus-1)
@@ -47,10 +49,9 @@ Molly Bletz
     -   [Strabomantis bufoniformis](#strabomantis-bufoniformis-1)
     -   [Atelopus zeteki](#atelopus-zeteki)
 -   [Supplementary Analyses](#supplementary-analyses)
-    -   [Correlations (Antifungal function to
-        Richness)](#correlations-antifungal-function-to-richness)
-    -   [EP location pairwise
-        distances](#ep-location-pairwise-distances)
+    -   [Correlations](#correlations)
+    -   [Espadarana prosoblepon - location pairwise
+        distances](#espadarana-prosoblepon---location-pairwise-distances)
     -   [Atelopus Mesocosms - Microbiome
         trajectory](#atelopus-mesocosms---microbiome-trajectory)
     -   [Atelopus size correlations](#atelopus-size-correlations)
@@ -66,7 +67,7 @@ library(dplyr)
 library(qiime2R)
 ```
 
-## Data
+## Reading in Data
 
 ``` r
 CW_Mapping = read_tsv("./Mapping/Mapping_Dec3_MCB.txt")
@@ -199,6 +200,8 @@ print(EffectSize_Richness)
 sink()
 ```
 
+### Effect Plot
+
 ``` r
 meta::forest(EffectSize_Richness,
        layout = "JAMA",
@@ -207,8 +210,6 @@ meta::forest(EffectSize_Richness,
 ```
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/5-1.png)<!-- -->
-
-*axis is Hedge’s g (Standard mean difference)*
 
 <span style="color: purple;"> Notes on Heterogeneity: All three of our
 indicators suggest that moderate to substantial heterogeneity is present
@@ -230,6 +231,8 @@ heterogeneity making our effect size estimate less precise could be that
 there are slight differences in the study design or intervention
 components between the studies.
 (<https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/>) </span>
+
+#### Sub-Group:Housing Substrate
 
 ``` r
 substrate.subgroup<-meta::update.meta(EffectSize_Richness, 
@@ -327,6 +330,8 @@ meta::forest(substrate.subgroupmix,layout = "JAMA",spacing =0.5,fontsize = 8)
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
+#### Sub-Group:Generation (Born vs Brought into captivity)
+
 ``` r
 generation.subgroup<-meta::update.meta(EffectSize_Richness, 
                              byvar=GenerationCaptivity, 
@@ -421,6 +426,8 @@ meta::forest(generation.subgroup,layout = "JAMA",spacing =0.5,fontsize = 8)
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
+#### Sub-Group: Amphibian Order (Frog vs. Salamnder)
+
 ``` r
 Order.subgroup<-meta::update.meta(EffectSize_Richness, 
                              byvar=FrogOrder, 
@@ -490,6 +497,8 @@ meta::forest(layout = "JAMA",Order.subgroup,colgap.forest.left = unit(15,"mm"),s
 ```
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+#### Sub-Group: Geographic Region
 
 ``` r
 Region.subgroup<-meta::update.meta(EffectSize_Richness, 
@@ -605,6 +614,8 @@ EffSpComb = EffSpComb %>%
   left_join(.,SubGrp_Data, by = "Study.SpeciesID")
 ```
 
+### Effect Model
+
 ``` r
 EffectSize_EffSpecies= meta::metacont(Ne,Me,Se,Nc,Mc,Sc,studlab = paste(Study.SpeciesID),
          data = EffSpComb,
@@ -664,6 +675,8 @@ print(EffectSize_EffSpecies)
 sink()
 ```
 
+### Effect Plot
+
 ``` r
 meta::forest(EffectSize_EffSpecies,
        layout = "JAMA",
@@ -673,11 +686,11 @@ meta::forest(EffectSize_EffSpecies,
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/7-1.png)<!-- -->
 
-*axis is Hedge’s g (Standard mean difference)*
-
 ### GOSH analysis
 
 ### Sub-group analysis
+
+#### Sub-Group: Housing substrate
 
 ``` r
 EffSpp_substrate.subgroup<-meta::update.meta(EffectSize_EffSpecies, 
@@ -766,6 +779,8 @@ EffSpp_substrate.subgroup
     ## - Q-profile method for confidence interval of tau^2 and tau
     ## - Hartung-Knapp adjustment for random effects model
     ## - Hedges' g (bias corrected standardised mean difference)
+
+#### Sub-Group: Generations
 
 ``` r
 EffSpp_generation.subgroup<-meta::update.meta(EffectSize_EffSpecies, 
@@ -960,6 +975,8 @@ print(EffectSize_FaithPD)
 sink()
 ```
 
+### Effect Plot
+
 ``` r
 meta::forest(EffectSize_FaithPD,
        layout = "JAMA",
@@ -974,6 +991,8 @@ meta::forest(EffectSize_FaithPD,
 ### GOSH analysis
 
 ### Sub-group analysis
+
+#### SubGroup: Housing Substrate
 
 ``` r
 FaithPD_substrate.subgroup<-meta::update.meta(EffectSize_FaithPD, 
@@ -1062,6 +1081,8 @@ FaithPD_substrate.subgroup
     ## - Q-profile method for confidence interval of tau^2 and tau
     ## - Hartung-Knapp adjustment for random effects model
     ## - Hedges' g (bias corrected standardised mean difference)
+
+#### SubGroup: Generation
 
 ``` r
 FaithPD_generation.subgroup<-meta::update.meta(EffectSize_FaithPD, 
@@ -1256,6 +1277,8 @@ print(EffectSize_Evenness)
 sink()
 ```
 
+### Effect Model
+
 ``` r
 meta::forest(EffectSize_Evenness,
        layout = "JAMA",
@@ -1265,11 +1288,11 @@ meta::forest(EffectSize_Evenness,
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/11-1.png)<!-- -->
 
-*axis is Hedge’s g (Standard mean difference)*
-
 ### GOSH analysis
 
 ### Sub-group analysis
+
+#### SubGroup: Housing Substrate
 
 ``` r
 Evenness_substrate.subgroup<-meta::update.meta(EffectSize_Evenness, 
@@ -1358,6 +1381,8 @@ Evenness_substrate.subgroup
     ## - Q-profile method for confidence interval of tau^2 and tau
     ## - Hartung-Knapp adjustment for random effects model
     ## - Hedges' g (bias corrected standardised mean difference)
+
+#### SubGroup: Generation
 
 ``` r
 Evenness_generation.subgroup<-meta::update.meta(EffectSize_Evenness, 
@@ -1552,6 +1577,8 @@ print(EffectSize_AFRichness)
 sink()
 ```
 
+### Effect Plot
+
 ``` r
 meta::forest(EffectSize_AFRichness,
        layout = "JAMA",
@@ -1561,11 +1588,11 @@ meta::forest(EffectSize_AFRichness,
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/13-1.png)<!-- -->
 
-*axis is Hedge’s g (Standard mean difference)*
-
 ### GOSH analysis
 
 ### Sub-group analysis
+
+#### SubGroup: Housing Substrate
 
 ``` r
 AFRich_substrate.subgroup<-meta::update.meta(EffectSize_AFRichness, 
@@ -1654,6 +1681,8 @@ AFRich_substrate.subgroup
     ## - Q-profile method for confidence interval of tau^2 and tau
     ## - Hartung-Knapp adjustment for random effects model
     ## - Hedges' g (bias corrected standardised mean difference)
+
+#### SubGroup: Generation
 
 ``` r
 AFRich_generation.subgroup<-meta::update.meta(EffectSize_AFRichness, 
@@ -1848,6 +1877,8 @@ print(EffectSize_ProporAF)
 sink()
 ```
 
+### Effect Plot
+
 ``` r
 meta::forest(EffectSize_ProporAF,
        layout = "JAMA",
@@ -1857,11 +1888,11 @@ meta::forest(EffectSize_ProporAF,
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/15-1.png)<!-- -->
 
-*axis is Hedge’s g (Standard mean difference)*
-
 ### GOSH analysis
 
 ### Sub-group analysis\*
+
+#### SubGroup: Housing Substrate
 
 ``` r
 AFPropor_substrate.subgroup<-meta::update.meta(EffectSize_ProporAF, 
@@ -1950,6 +1981,8 @@ AFPropor_substrate.subgroup
     ## - Q-profile method for confidence interval of tau^2 and tau
     ## - Hartung-Knapp adjustment for random effects model
     ## - Hedges' g (bias corrected standardised mean difference)
+
+#### SubGroup: Generation
 
 ``` r
 AFPropor_generation.subgroup<-meta::update.meta(EffectSize_ProporAF, 
@@ -2074,6 +2107,7 @@ Order <-c("Andrias japonicus","Cynops pyrrhogaster","Plethodon cinereusSterile",
   scale_x_discrete()+
   xlab("Study")+
   ylab("Effect Size(Hedge's g)") +
+  ggtitle("Effect Size of all alpha and antifungal parameters")+
   coord_flip(ylim = c(-3.5,3.5))+
   facet_wrap(~Parameter) + 
     guides(colour = "none",shape = guide_legend("Substrate Type"), size = guide_legend("Sample Size"))
@@ -2099,6 +2133,7 @@ library(tidyverse)
   scale_x_discrete()+
   xlab("Study")+
   ylab("Effect Size(Hedge's g)") +
+     ggtitle("Effect Size of all alpha and antifungal parameters")+
   coord_flip(ylim = c(-3.5,3.5))+
   facet_wrap(~Parameter) + 
     guides(colour = "none",shape = guide_legend("Captive Generation"), size = guide_legend("Sample Size"))
@@ -2331,7 +2366,7 @@ BetaDivComb = CapWithGroup %>%
   unite(SppCapWild, Species, CaptiveWild, sep = "_", remove = FALSE)
 ```
 
-### Effect Size models
+### Effect Size model
 
 \*\* Looking at unweighted unifrac pairwise within group distances\*\*
 
@@ -2397,6 +2432,8 @@ print(EffectSize_BetaDiv)
 sink()
 ```
 
+### Effect Plot
+
 ``` r
 meta::forest(EffectSize_BetaDiv,
        layout = "JAMA",
@@ -2404,7 +2441,7 @@ meta::forest(EffectSize_BetaDiv,
        col.predict = "black", colgap.forest.left = unit(15,"mm"),spacing =0.5,fontsize = 8)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
 ``` r
 Order2 <-c("Andrias japonicus_Captive","Cynops pyrrhogaster_Captive","Plethodon cinereus_CaptiveSterile","Plethodon cinereus_CaptiveNatural","Ambystoma maculatum_CaptiveNatural","Ambystoma maculatum_CaptiveSterile","Cryptobranchus alleganiensis_Captive","Anaxyrus boreas_Captive","Rana luteiventris_Captive","Rana pretsiosa_Captive","Lithobates catesbeianus_Captive","Mantella aurantiaca_Captive","Atelopus certus_Captive","Atelopus limosus_Captive","Atelopus varius_Captive","Espadarana prosoblepon_Captive","Hylomantis lemur_Captive","Osteopilus septentrionalis_Captive","Strabomantis bufoniformis_Captive","Atelopus zeteki_Captive")
@@ -2421,11 +2458,12 @@ Order2 <-c("Andrias japonicus_Captive","Cynops pyrrhogaster_Captive","Plethodon 
   scale_x_discrete()+
   xlab("Study")+
   ylab("Effect Size(Hedge's g)") +
+     ggtitle("Effect Size of all beta dispersion")+
   coord_flip(ylim = c(-4,4))+ 
     guides(colour = "none",shape = guide_legend("Substrate Type"), size = guide_legend("Sample Size"))
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
 
 ## PCoA (unWUF)
 
@@ -2589,7 +2627,7 @@ CompilePCoA_ALL %>%
   facet_wrap(~FrogSpecies, scales = "free",ncol = 3)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-48-1.png)<!-- -->
 
 ## PCoA (wUF)
 
@@ -2753,9 +2791,12 @@ CompilePCoA_ALLWUF %>%
   facet_wrap(~FrogSpecies, scales = "free",ncol = 3)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-50-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-55-1.png)<!-- -->
 
 ## Adonis
+
+**looping adonis models for each species-study and outputting results to
+working directory**
 
 ``` r
 ##function for pairwise distances with 2885 rarefaction
@@ -2886,6 +2927,10 @@ write.table(AdonisResults2, file = paste(CWMetadata_Alpha_RAPR[2,3],".adonis.txt
 
 ``` r
 LDM_features = read_tsv("./LDM_Differential/CW_Significant_Taxa_ALL_Confirm_Order_Fix.txt")
+
+Taxonomy = read_qza("Taxonomy_classification.qza")$data  %>%
+  parse_taxonomy() %>%
+  rownames_to_column("Feature.ID")
 ```
 
 ## Plots
@@ -2946,7 +2991,7 @@ OTU_table_CYPY_SigOTUs_tr_back_Long %>%
   ggtitle("Cynops pyrrhogaster")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-57-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-62-1.png)<!-- -->
 
 ### Rana luteiventris
 
@@ -3003,7 +3048,7 @@ OTU_table_RALU_SigOTUs_tr_back_Long %>%
   ggtitle("Rana luteiventris")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-58-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-63-1.png)<!-- -->
 
 ### Rana pretsiosa
 
@@ -3060,7 +3105,7 @@ OTU_table_RAPR_SigOTUs_tr_back_Long %>%
   ggtitle("Rana pretsiosa")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-59-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-64-1.png)<!-- -->
 
 ### Andrias
 
@@ -3073,8 +3118,6 @@ OTU_table_RAPR_SigOTUs_tr_back_Long %>%
 
 # read in OTU, ranspose
 
-#table_ANJA<-read_tsv("./Andrias_fromJordan/FT_Map_Andrias_japonicus.txt") %>%column_to_rownames("OTU_ID")
-
 table_ANJA<-read_qza("./CoreMetrics/CoreMetrics_4low_species/MapFilt_Biom_ALL_Filter_to_full_C_W_comparisons_W_Obed_OTUidDupFix_Andreas_Becker_added_N_10_filterd_remove_clorplast_mitochondria_filt_1254_Andrias_japonicus/rarefied_table.qza")$data %>% as.data.frame()
 
 table_ANJA_tr = as.data.frame(t(table_ANJA)) %>%
@@ -3086,7 +3129,7 @@ table_ANJA_tr = as.data.frame(t(table_ANJA)) %>%
 ### LDM model rerun
 library(LDM)
 ANJA.ldm_otu <-ldm(table_ANJA_tr ~ 
-                CWMetadata_Alpha_ANJA$CaptiveWild, test.global = TRUE, test.otu=TRUE, fdr.nominal = 0.1, n.rej.stop=100,seed = 123)
+                CWMetadata_Alpha_ANJA$CaptiveWild, test.global = TRUE, test.otu=TRUE, fdr.nominal = 0.1, n.rej.stop=20,seed = 123)
 ```
 
     ## permutations: 1 
@@ -3095,40 +3138,8 @@ ANJA.ldm_otu <-ldm(table_ANJA_tr ~
     ## permutations: 3001 
     ## permutations: 4001 
     ## permutations: 5001 
-    ## number of OTUs do not meet early stopping criterion: 95 
-    ## permutations: 6001 
-    ## number of OTUs do not meet early stopping criterion: 86 
-    ## permutations: 7001 
-    ## number of OTUs do not meet early stopping criterion: 85 
-    ## permutations: 8001 
-    ## number of OTUs do not meet early stopping criterion: 85 
-    ## permutations: 9001 
-    ## number of OTUs do not meet early stopping criterion: 81 
-    ## permutations: 10001 
-    ## number of OTUs do not meet early stopping criterion: 67 
-    ## permutations: 11001 
-    ## number of OTUs do not meet early stopping criterion: 67 
-    ## permutations: 12001 
-    ## number of OTUs do not meet early stopping criterion: 65 
-    ## permutations: 13001 
-    ## number of OTUs do not meet early stopping criterion: 65 
-    ## permutations: 14001 
-    ## number of OTUs do not meet early stopping criterion: 63 
-    ## permutations: 15001 
-    ## number of OTUs do not meet early stopping criterion: 63 
-    ## permutations: 16001 
-    ## number of OTUs do not meet early stopping criterion: 63 
-    ## permutations: 17001 
-    ## number of OTUs do not meet early stopping criterion: 63 
-    ## permutations: 18001 
-    ## number of OTUs do not meet early stopping criterion: 62 
-    ## permutations: 19001 
-    ## number of OTUs do not meet early stopping criterion: 60 
-    ## permutations: 20001 
-    ## number of OTUs do not meet early stopping criterion: 59 
-    ## permutations: 21001 
-    ## number of OTUs do not meet early stopping criterion: 57 
-    ## otu test stopped at permutation 21500
+    ## number of OTUs do not meet early stopping criterion: 56 
+    ## otu test stopped at permutation 5700
 
 ``` r
 q.otu.omniResults <- as.data.frame(t(ANJA.ldm_otu$q.otu.omni)) %>%
@@ -3154,7 +3165,8 @@ OTU_table_ANJA_SigOTUs_tr = as.data.frame(t(OTU_table_ANJA_SigOTUs))
 OTU_table_ANJA_SigOTUs_tr[c(1:31)] <- lapply(OTU_table_ANJA_SigOTUs_tr[c(1:31)], function(x) c(scale(x)))
 
 OTU_table_ANJA_SigOTUs_tr_back = t(OTU_table_ANJA_SigOTUs_tr)%>%
-  as.data.frame()
+  as.data.frame()%>%
+  mutate(id = row_number())
 
 OTU_table_ANJA_SigOTUs_tr_back_Long = OTU_table_ANJA_SigOTUs_tr_back %>%
   rownames_to_column("Feature.ID")%>%
@@ -3164,15 +3176,16 @@ OTU_table_ANJA_SigOTUs_tr_back_Long = OTU_table_ANJA_SigOTUs_tr_back %>%
 
 # classic ggplot, with text in aes
 OTU_table_ANJA_SigOTUs_tr_back_Long %>%
-  ggplot(aes(SampleID, Feature.ID, fill= value)) + 
+  ggplot(aes(SampleID, as.factor(id), fill= value)) + 
   geom_tile()+
   scale_fill_viridis_c()+
   theme(axis.text.x = element_blank()) +
+  ylab("Features")+
   facet_grid(~CaptiveWild, scales = "free_x", space = "free_x")+
   ggtitle("Andrias japonicus")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-60-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-65-1.png)<!-- -->
 
 ``` r
  CWMetadata_Alpha_Others = CWMetadata_Alpha %>% 
@@ -3247,7 +3260,7 @@ OTU_table_ANBO_SigOTUs_tr_back_Long %>%
   ggtitle("Anaxyrus boreas")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-62-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-67-1.png)<!-- -->
 
 ### Ambystoma maculatum
 
@@ -3302,7 +3315,7 @@ OTU_table_AMMA_SigOTUs_tr_back_Long %>%
   ggtitle("Ambystoma maculatum")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-63-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-68-1.png)<!-- -->
 
 ### Plethodon cinereus
 
@@ -3357,7 +3370,7 @@ OTU_table_PLCI_SigOTUs_tr_back_Long %>%
   ggtitle("Plethodon cinereus")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-64-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-69-1.png)<!-- -->
 
 ### Atelopus certus
 
@@ -3412,7 +3425,7 @@ OTU_table_ATCE_SigOTUs_tr_back_Long %>%
   ggtitle("Atelopus certus")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-65-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-70-1.png)<!-- -->
 
 ### Atelopus limosus
 
@@ -3428,13 +3441,14 @@ CWMetadata_Alpha_ATLI = CWMetadata_Alpha %>%
 table_ATLI_tr = as.data.frame(t(table_2885_all)) %>%
   rownames_to_column("SampleID") %>%
   filter(SampleID %in% CWMetadata_Alpha_ATLI$SampleID) %>%
+  arrange(SampleID)%>%
   column_to_rownames("SampleID")
 
 table_ATLI_tr_back = as.data.frame(t(table_ATLI_tr))
 
 LDM_features_ATLI = LDM_features %>%
   filter(Species== "Atelopus_limosus")%>%
-  filter(ldm.qval<0.005)
+  filter(ldm.qval<0.01)
 
 OTU_table_ATLI_SigOTUs = table_ATLI_tr_back %>%
   rownames_to_column("Feature.ID")%>%
@@ -3443,13 +3457,14 @@ OTU_table_ATLI_SigOTUs = table_ATLI_tr_back %>%
 
 # make heatmap
 
-OTU_table_ATLI_SigOTUs_tr = as.data.frame(t(OTU_table_ATLI_SigOTUs)) 
+OTU_table_ATLI_SigOTUs_tr = as.data.frame(t(OTU_table_ATLI_SigOTUs))
 
 #number = "variable" columns
-OTU_table_ATLI_SigOTUs_tr[c(1:134)] <- lapply(OTU_table_ATLI_SigOTUs_tr[c(1:134)], function(x) c(scale(x)))
+OTU_table_ATLI_SigOTUs_tr[c(1:148)] <- lapply(OTU_table_ATLI_SigOTUs_tr[c(1:148)], function(x) c(scale(x)))
 
 OTU_table_ATLI_SigOTUs_tr_back = t(OTU_table_ATLI_SigOTUs_tr)%>%
-  as.data.frame()
+  as.data.frame() %>%
+  filter(!is.na(Al.90H9))
 
 OTU_table_ATLI_SigOTUs_tr_back_Long = OTU_table_ATLI_SigOTUs_tr_back %>%
   rownames_to_column("Feature.ID")%>%
@@ -3459,6 +3474,7 @@ OTU_table_ATLI_SigOTUs_tr_back_Long = OTU_table_ATLI_SigOTUs_tr_back %>%
 
 # classic ggplot, with text in aes
 OTU_table_ATLI_SigOTUs_tr_back_Long %>%
+  left_join(Taxonomy, by = "Feature.ID") %>%
   ggplot(aes(SampleID, Name, fill= value)) + 
   geom_tile()+
   scale_fill_viridis_c()+
@@ -3467,7 +3483,7 @@ OTU_table_ATLI_SigOTUs_tr_back_Long %>%
   ggtitle("Atelopus limosus")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-66-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-71-1.png)<!-- -->
 
 ### Atelopus varius
 
@@ -3521,7 +3537,7 @@ OTU_table_ATVA_SigOTUs_tr_back_Long %>%
   ggtitle("Atelopus varius (0.05)")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-67-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-72-1.png)<!-- -->
 
 ### Espadarana prosoblepon
 
@@ -3575,7 +3591,7 @@ OTU_table_ESPR_SigOTUs_tr_back_Long %>%
   ggtitle("Espadarana prosoblepon")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-68-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-73-1.png)<!-- -->
 
 ### Hylomantis lemur
 
@@ -3615,7 +3631,8 @@ OTU_table_LICA_SigOTUs_tr = as.data.frame(t(OTU_table_LICA_SigOTUs))
 OTU_table_LICA_SigOTUs_tr[c(1:34)] <- lapply(OTU_table_LICA_SigOTUs_tr[c(1:34)], function(x) c(scale(x)))
 
 OTU_table_LICA_SigOTUs_tr_back = t(OTU_table_LICA_SigOTUs_tr)%>%
-  as.data.frame()
+  as.data.frame()%>%
+  filter(!is.na(bullfrog.NA.150708.10))
 
 OTU_table_LICA_SigOTUs_tr_back_Long = OTU_table_LICA_SigOTUs_tr_back %>%
   rownames_to_column("Feature.ID")%>%
@@ -3633,7 +3650,7 @@ OTU_table_LICA_SigOTUs_tr_back_Long %>%
   ggtitle("Lithobates catesbeianus")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-70-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-75-1.png)<!-- -->
 
 ### Strabomantis bufoniformis
 
@@ -3687,7 +3704,7 @@ OTU_table_STBU_SigOTUs_tr_back_Long %>%
   ggtitle("Strabomantis bufoniformis")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-71-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-76-1.png)<!-- -->
 \#\#\# Atelopus zeteki
 
 ``` r
@@ -3722,7 +3739,8 @@ OTU_table_ATZE_SigOTUs_tr = as.data.frame(t(OTU_table_ATZE_SigOTUs))
 OTU_table_ATZE_SigOTUs_tr[c(1:15)] <- lapply(OTU_table_ATZE_SigOTUs_tr[c(1:15)], function(x) c(scale(x)))
 
 OTU_table_ATZE_SigOTUs_tr_back = t(OTU_table_ATZE_SigOTUs_tr)%>%
-  as.data.frame()
+  as.data.frame()%>%
+  filter(!is.na(Az.A7))
 
 OTU_table_ATZE_SigOTUs_tr_back_Long = OTU_table_ATZE_SigOTUs_tr_back %>%
   rownames_to_column("Feature.ID")%>%
@@ -3740,7 +3758,7 @@ OTU_table_ATZE_SigOTUs_tr_back_Long %>%
   ggtitle("Atelopus zeteki")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-72-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-77-1.png)<!-- -->
 
 # Venn Diagrams (Captive only)
 
@@ -3777,14 +3795,14 @@ Merged_CW_phyloseq_Captive_Sal = phyloseq::subset_samples(Merged_CW_phyloseq_Cap
 
 MicEco::ps_venn(
   Merged_CW_phyloseq_Captive_Sal,group = "FrogSpecies",
-  fraction = 0.80,
+  fraction = 0.80, # proportion of individuals that have to have the OTU for it be 'counted'
   weight = FALSE,
   type = "counts",
   relative = TRUE,
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-74-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-79-1.png)<!-- -->
 
 ## Venn Diagram Anura Temperate
 
@@ -3804,7 +3822,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-75-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-80-1.png)<!-- -->
 
 ## Venn Diagram Anura Tropical
 
@@ -3826,7 +3844,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-76-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-81-1.png)<!-- -->
 
 # Venn Diagrams (Wild-Cap)
 
@@ -3865,25 +3883,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-78-1.png)<!-- -->
-
-``` r
-#install.packages("GGally")
-#library(pkgbuild)
-#library(GGally)
-#library(ggnet)
-
-#devtools::install_github("r-lib/pkgbuild", force = TRUE)
-#NEEDS  install of withR
-
-#devtools::install_github("briatte/ggnet")
-
-#install.packages("remotes")
-#devtools::install_github("MadsAlbertsen/ampvis2")
-
-#table_rar1234_feat_ampvis <- table_rar1234_feat %>% 
- #  filter_all(., any_vars(. != 0)) 
-```
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-83-1.png)<!-- -->
 
 ## Anaxyrus boreas
 
@@ -3901,7 +3901,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-79-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-84-1.png)<!-- -->
 
 ## Rana luteiventris
 
@@ -3919,8 +3919,9 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-80-1.png)<!-- -->
-\#\# Rana pretsiosa
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-85-1.png)<!-- -->
+
+## Rana pretsiosa
 
 *(present in 75% of samples)*
 
@@ -3936,8 +3937,9 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-81-1.png)<!-- -->
-\#\# Ambystoma maculatum
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-86-1.png)<!-- -->
+
+## Ambystoma maculatum
 
 *(present in 75% of samples)*
 
@@ -3953,7 +3955,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-82-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-87-1.png)<!-- -->
 
 ## Andrias japonicus
 
@@ -3971,7 +3973,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-83-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-88-1.png)<!-- -->
 
 ## Cynops pyrrhogaster
 
@@ -3989,7 +3991,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-84-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-89-1.png)<!-- -->
 
 ## Plethodon cinereus
 
@@ -4007,7 +4009,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-85-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-90-1.png)<!-- -->
 
 ## Cryptobranchus alleganiensis
 
@@ -4025,7 +4027,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-86-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-91-1.png)<!-- -->
 
 ## Atelopus certus
 
@@ -4043,7 +4045,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-87-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-92-1.png)<!-- -->
 
 ## Atelopus limosus
 
@@ -4061,7 +4063,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-88-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-93-1.png)<!-- -->
 
 ## Atelopus varius
 
@@ -4079,7 +4081,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-89-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-94-1.png)<!-- -->
 
 ## Espadarana prosoblepon
 
@@ -4097,7 +4099,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-90-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-95-1.png)<!-- -->
 
 ## Hylomantis lemur
 
@@ -4115,7 +4117,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-91-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-96-1.png)<!-- -->
 
 ## Lithobates catesbeianus
 
@@ -4133,7 +4135,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-92-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-97-1.png)<!-- -->
 
 ## Mantella aurantiaca
 
@@ -4151,7 +4153,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-93-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-98-1.png)<!-- -->
 
 ## Osteopilus septentrionalis
 
@@ -4169,7 +4171,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-94-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-99-1.png)<!-- -->
 
 ## Strabomantis bufoniformis
 
@@ -4187,7 +4189,7 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-95-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-100-1.png)<!-- -->
 
 ## Atelopus zeteki
 
@@ -4205,11 +4207,13 @@ MicEco::ps_venn(
   plot = TRUE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-96-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-101-1.png)<!-- -->
 
 # Supplementary Analyses
 
-## Correlations (Antifungal function to Richness)
+## Correlations
+
+### Antifungal function to Richness
 
 ``` r
 CWMetadata_Alpha %>%
@@ -4223,7 +4227,9 @@ CWMetadata_Alpha %>%
   guides(color=FALSE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-97-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-102-1.png)<!-- -->
+
+### Antifungal to Effective species
 
 ``` r
 CWMetadata_Alpha %>%
@@ -4237,7 +4243,7 @@ CWMetadata_Alpha %>%
   guides(color=FALSE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-98-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-103-1.png)<!-- -->
 
 ``` r
 CWMetadata_Alpha %>%
@@ -4252,7 +4258,9 @@ CWMetadata_Alpha %>%
   ggtitle("logged effective species for better vis")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-98-2.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-103-2.png)<!-- -->
+
+### Data Prep - compiling Means,standard deviations for each study
 
 ``` r
 RichnessComb_e = RichnessComb %>%
@@ -4309,7 +4317,7 @@ Combined_Mean_Data %>%
   guides(color=FALSE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-99-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-104-1.png)<!-- -->
 
 ``` r
 Combined_Mean_Data %>%
@@ -4323,7 +4331,7 @@ Combined_Mean_Data %>%
   guides(color=FALSE)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-99-2.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-104-2.png)<!-- -->
 
 ``` r
 Combined_Mean_Data %>%
@@ -4338,7 +4346,7 @@ Combined_Mean_Data %>%
   facet_wrap(~Type)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-99-3.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-104-3.png)<!-- -->
 
 ``` r
 Combined_Mean_Data %>%
@@ -4353,80 +4361,9 @@ Combined_Mean_Data %>%
   facet_wrap(~Type)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-99-4.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-104-4.png)<!-- -->
 
-## EP location pairwise distances
-
-``` r
-CWMetadata_Alpha_ESPR = CWMetadata_Alpha %>% 
-  filter(FrogSpecies=="Espadarana prosoblepon") %>%
-  unite(SppCapWild, FrogSpecies, CaptiveWild, sep = "_", remove = FALSE) 
-  uWUFmatb<-read_qza("./CoreMetrics/CapWiild_taxafilt_mappingfiitNov13_CoreMet_rare2885/unweighted_unifrac_distance_matrix.qza")
-
-  uWUFmat2 <- as.matrix(uWUFmatb$data)
-  
-                    
-metaListESPR<-as.vector(CWMetadata_Alpha_ESPR$SampleID)
- uWUFmatESPR3 <- usedist::dist_subset(uWUFmat2,metaListESPR)
- uWUFmatESPR4 <-as.matrix(uWUFmatESPR3)
-
-
-PairwiseDataESPR <- adegenet::pairDist(uWUFmatESPR4,CWMetadata_Alpha_ESPR$Locality, within = FALSE)
-
-PairwiseDataESPR2 <- PairwiseDataESPR$data
-
-PairwiseDataESPR3 = PairwiseDataESPR2 %>%
-  mutate(comparison = PairwiseDataESPR2$groups) %>%
-  separate(col = comparison,into = c("Group1","Group2"), sep = "-") %>%
-  filter(Group1=="EVACC")
-
-PairwiseDataESPR3 %>%
-  ggplot(aes(x =  groups, y = distance, fill = groups))+
-  geom_boxplot(aes())+
-  ggthemes::scale_fill_colorblind()+
-  guides(fill = "none")+
-  theme_q2r()+
-  theme(axis.text.x = element_text(angle = 90))+
-  xlab("Captive to Wild Locations")+
-  ylab("Unweighted Unifrac distances")+
-   ggtitle("Pairwise Distances (unweighted unifrac)")
-```
-
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-101-1.png)<!-- -->
-
-``` r
-##Weighted
-
-  WUFmat<-read_qza("./CoreMetrics/CapWiild_taxafilt_mappingfiitNov13_CoreMet_rare2885/weighted_unifrac_distance_matrix.qza")
-  
-  WUFmat2 <- as.matrix(WUFmat$data)
-
-WUFmatESPR3 <- usedist::dist_subset(WUFmat2,metaListESPR)
- WUFmatESPR4 <-as.matrix(WUFmatESPR3)
-
-
-PairwiseDataESPR_w <- adegenet::pairDist(WUFmatESPR4,CWMetadata_Alpha_ESPR$Locality, within = FALSE)
-
-PairwiseDataESPR_w2 <- PairwiseDataESPR_w$data
-
-PairwiseDataESPR_w3 = PairwiseDataESPR_w2 %>%
-  mutate(comparison = PairwiseDataESPR_w2$groups) %>%
-  separate(col = comparison,into = c("Group1","Group2"), sep = "-") %>%
-  filter(Group1=="EVACC")
-
-PairwiseDataESPR_w3 %>%
-  ggplot(aes(x =  groups, y = distance, fill = groups))+
-  geom_boxplot(aes())+
-  ggthemes::scale_fill_colorblind()+
-  guides(fill = "none")+
-  theme_q2r()+
-  theme(axis.text.x = element_text(angle = 90))+
-  xlab("Captive to Wild Locations")+
-  ylab("Weighted Unifrac distances")+
-  ggtitle("Pairwise Distances (weighted unifrac)")
-```
-
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-101-2.png)<!-- -->
+## Espadarana prosoblepon - location pairwise distances
 
 ## Atelopus Mesocosms - Microbiome trajectory
 
@@ -4462,7 +4399,7 @@ PcoA_AxesAtelopus3 %>%
   guides(alpha = "none",shape = "none",size = "none", color = guide_legend("Captive-Wild"))
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-103-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-108-1.png)<!-- -->
 
 ``` r
 # PCOA 
@@ -4496,7 +4433,7 @@ PcoA_AxesAtelopus3 %>%
   guides(alpha = "none",shape = "none", color = guide_legend("Time"))
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-105-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-110-1.png)<!-- -->
 
 ``` r
 AtelopusMeso %>%
@@ -4504,11 +4441,11 @@ AtelopusMeso %>%
   geom_point(aes(alpha=0.5))+
   geom_smooth()+
   theme_q2r() +
-  ggtitle("Community Composition (unweighted Unifrac)") +
+  ggtitle("Antifungal function") +
   guides(alpha = "none",shape = "none",size = "none")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-106-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-111-1.png)<!-- -->
 
 ## Atelopus size correlations
 
@@ -4528,7 +4465,7 @@ AtelopusMeso_Full %>%
   facet_wrap(~lifeStage)
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-108-1.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-113-1.png)<!-- -->
 
 ``` r
 AtelopusMeso_Full %>%
@@ -4541,7 +4478,7 @@ AtelopusMeso_Full %>%
   guides(alpha = "none",shape = "none",size = "none")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-108-2.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-113-2.png)<!-- -->
 
 ``` r
 AtelopusMeso_Full %>%
@@ -4555,7 +4492,7 @@ AtelopusMeso_Full %>%
   ggtitle("sOTUs (all)")
 ```
 
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-108-3.png)<!-- -->
+![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-113-3.png)<!-- -->
 
 ``` r
 ggpubr::stat_cor()
@@ -4564,38 +4501,3 @@ ggpubr::stat_cor()
     ## geom_text: parse = TRUE, na.rm = FALSE
     ## stat_cor: label.x.npc = left, label.y.npc = top, label.x = NULL, label.y = NULL, label.sep = , , method = pearson, output.type = expression, digits = 2, r.digits = 2, p.digits = 2, cor.coef.name = R, na.rm = FALSE
     ## position_identity
-
-``` r
-# PCOA 
-
-AtelopusMeso_Full_Field = AtelopusMeso_Full %>%
-  filter(SAMPLE =="field")
-
-unWUFmat_Atelopus<-read_qza("./atelopusdata/unweighted_unifrac_distance_matrix.qza")
-  
-unWUFmat_Atelopus2 <- as.matrix(unWUFmat_Atelopus$data)
-  
-  metaList<-as.vector(AtelopusMeso_Full_Field$SampleID)
- unWUFmat_Atelopus3 <- usedist::dist_subset(unWUFmat_Atelopus2,metaList)
-  unWUFmat_Atelopus4 <-as.matrix(unWUFmat_Atelopus3)
-  
-PcoA_AxesAtelopusFld <- ape::pcoa(unWUFmat_Atelopus4)
-
-PcoA_AxesAtelopusFld2 = as.data.frame(PcoA_AxesAtelopusFld$vectors)
-PcoA_AxesAtelopusFld3 =tibble::rownames_to_column(PcoA_AxesAtelopusFld2, "SampleID")
-```
-
-``` r
-PcoA_AxesAtelopusFld3 %>%
-  select(SampleID, Axis.1, Axis.2,Axis.3) %>%
-  left_join(AtelopusMeso_Full_Field, by = "SampleID") %>%
-  ggplot(aes(x=Axis.1, y=Axis.2,color=as.factor(infected),shape = lifeStage)) +
-  geom_point(aes(alpha=0.5,size = Propor_TotalAntiFungal))+
-  theme_q2r() +
-  ggthemes::scale_color_colorblind() +
-stat_ellipse(aes(),type = "t",linetype = 2)+
-  ggtitle("Community Composition (unweighted Unifrac)") +
-  guides(alpha = "none", color = guide_legend("Infection"))
-```
-
-![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-110-1.png)<!-- -->
