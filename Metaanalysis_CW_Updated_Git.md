@@ -30,24 +30,7 @@ Molly Bletz
 -   [Venn Diagrams (Wild-Cap)](#venn-diagrams-wild-cap)
     -   [Data prep](#data-prep)
     -   [All Species](#all-species)
-    -   [Anaxyrus boreas](#anaxyrus-boreas-1)
-    -   [Rana luteiventris](#rana-luteiventris-1)
-    -   [Rana pretsiosa](#rana-pretsiosa-1)
-    -   [Ambystoma maculatum](#ambystoma-maculatum-1)
-    -   [Andrias japonicus](#andrias-japonicus)
-    -   [Cynops pyrrhogaster](#cynops-pyrrhogaster)
-    -   [Plethodon cinereus](#plethodon-cinereus-1)
-    -   [Cryptobranchus alleganiensis](#cryptobranchus-alleganiensis)
-    -   [Atelopus certus](#atelopus-certus-1)
-    -   [Atelopus limosus](#atelopus-limosus-1)
-    -   [Atelopus varius](#atelopus-varius-1)
-    -   [Espadarana prosoblepon](#espadarana-prosoblepon-1)
-    -   [Hylomantis lemur](#hylomantis-lemur-1)
-    -   [Lithobates catesbeianus](#lithobates-catesbeianus-1)
-    -   [Mantella aurantiaca](#mantella-aurantiaca)
-    -   [Osteopilus septentrionalis](#osteopilus-septentrionalis)
-    -   [Strabomantis bufoniformis](#strabomantis-bufoniformis-1)
-    -   [Atelopus zeteki](#atelopus-zeteki)
+    -   [Individual species](#individual-species)
 -   [Supplementary Analyses](#supplementary-analyses)
     -   [Correlations](#correlations)
     -   [Espadarana prosoblepon - location pairwise
@@ -3885,7 +3868,9 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-83-1.png)<!-- -->
 
-## Anaxyrus boreas
+## Individual species
+
+### Anaxyrus boreas
 
 *(present in 75% of samples)*
 
@@ -3903,7 +3888,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-84-1.png)<!-- -->
 
-## Rana luteiventris
+### Rana luteiventris
 
 *(present in 75% of samples)*
 
@@ -3921,7 +3906,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-85-1.png)<!-- -->
 
-## Rana pretsiosa
+### Rana pretsiosa
 
 *(present in 75% of samples)*
 
@@ -3939,7 +3924,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-86-1.png)<!-- -->
 
-## Ambystoma maculatum
+### Ambystoma maculatum
 
 *(present in 75% of samples)*
 
@@ -3957,7 +3942,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-87-1.png)<!-- -->
 
-## Andrias japonicus
+### Andrias japonicus
 
 *(present in 75% of samples)*
 
@@ -3975,7 +3960,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-88-1.png)<!-- -->
 
-## Cynops pyrrhogaster
+### Cynops pyrrhogaster
 
 *(present in 75% of samples)*
 
@@ -3993,7 +3978,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-89-1.png)<!-- -->
 
-## Plethodon cinereus
+### Plethodon cinereus
 
 *(present in 75% of samples)*
 
@@ -4011,7 +3996,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-90-1.png)<!-- -->
 
-## Cryptobranchus alleganiensis
+### Cryptobranchus alleganiensis
 
 *(present in 75% of samples)*
 
@@ -4029,7 +4014,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-91-1.png)<!-- -->
 
-## Atelopus certus
+### Atelopus certus
 
 *(present in 75% of samples)*
 
@@ -4047,7 +4032,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-92-1.png)<!-- -->
 
-## Atelopus limosus
+### Atelopus limosus
 
 *(present in 75% of samples)*
 
@@ -4065,7 +4050,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-93-1.png)<!-- -->
 
-## Atelopus varius
+### Atelopus varius
 
 *(present in 75% of samples)*
 
@@ -4083,7 +4068,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-94-1.png)<!-- -->
 
-## Espadarana prosoblepon
+### Espadarana prosoblepon
 
 *(present in 75% of samples)*
 
@@ -4101,7 +4086,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-95-1.png)<!-- -->
 
-## Hylomantis lemur
+### Hylomantis lemur
 
 *(present in 75% of samples)*
 
@@ -4119,7 +4104,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-96-1.png)<!-- -->
 
-## Lithobates catesbeianus
+### Lithobates catesbeianus
 
 *(present in 75% of samples)*
 
@@ -4137,7 +4122,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-97-1.png)<!-- -->
 
-## Mantella aurantiaca
+### Mantella aurantiaca
 
 *(present in 75% of samples)*
 
@@ -4155,7 +4140,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-98-1.png)<!-- -->
 
-## Osteopilus septentrionalis
+### Osteopilus septentrionalis
 
 *(present in 75% of samples)*
 
@@ -4173,7 +4158,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-99-1.png)<!-- -->
 
-## Strabomantis bufoniformis
+### Strabomantis bufoniformis
 
 *(present in 75% of samples)*
 
@@ -4191,7 +4176,7 @@ MicEco::ps_venn(
 
 ![](Metaanalysis_CW_Updated_Git_files/figure-gfm/unnamed-chunk-100-1.png)<!-- -->
 
-## Atelopus zeteki
+### Atelopus zeteki
 
 *(present in 75% of samples)*
 
